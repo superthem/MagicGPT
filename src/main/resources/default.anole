@@ -1,0 +1,25 @@
+#env:all
+# LLM API的KEY，建议将该配置填写到系统环境变量中，以免泄露
+#AI_API_KEY=
+magicgpt.config.reader.threads.initialCount=100
+magicgpt.config.reader.threads.maxThreads=2000
+magicgpt.config.reader.threads.keepAliveTime.second=5
+magicgpt.config.wizard.status.responding.message=我正在回答你的上一个问题，请稍等。
+magicgpt.config.wizard.status.spelling.message=我正在处理问题，给我点时间哦。
+#VPN 配置
+#magicgpt.config.network.vpn.enabled=false
+#magicgpt.config.network.vpn.host=
+#magicgpt.config.network.vpn.port=
+
+
+# LLM模型API地址
+#llm.api.chat.url=
+#llm.chat.temperature=0.6
+# LLM接口读取超时设置(秒数)
+#llm.api.timeout.read=10
+# LLM接口调用超时设置(秒数)
+#llm.api.timeout.connect=10
+# LLM接口调用超时设置(秒数)
+#llm.api.timeout.call=60
+# LLM模型回答的最大长度。
+#llm.chat.response.max.length=4096
