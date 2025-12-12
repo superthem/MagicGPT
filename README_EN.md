@@ -95,19 +95,19 @@ Then import the MagicGPT package:
 For other package management methods such as Gradle, SBT, Leiningen, please refer to: https://jitpack.io/#cn.magicvector/MagicGPT
 
 
-### Set AI_API_KEY and API_MIRROR
+### Set AI_API_KEY and API_URL
 
 #### Set as VM options
 
 > E.g., in IDEA, add it in the "Edit Configurations".
 ```
--DAI_API_KEY=XXXXXXXXXXXXX -DAPI_MIRROR=https://XXXXXXXXXXXXX.XXXX/v1/chat/completions
+-DAI_API_KEY=XXXXXXXXXXXXX -DAPI_URL=https://XXXXXXXXXXXXX.XXXX/v1/chat/completions
 ```
 
 
 #### Set as system variables
 
-Configure the AI_API_KEY and API_MIRROR in the system environment. Below are the methods for setting environment variables on different operating systems:
+Configure the AI_API_KEY and API_URL in the system environment. Below are the methods for setting environment variables on different operating systems:
 
 Windows
 
@@ -146,17 +146,19 @@ Linux
 
 Alternatively, it can also be defined in any .anole or .properties file (although this method is not recommended as it may lead to privacy leaks).
 
-### Start a chat
+### Start MagicGPT app and initialize a chat
 ```java
 
-    // Specify package name to search for local Call type spells
-    MagicGPT magicGPT = new MagicGPT(TestTimeReporter.class.getPackage().getName(),
-            OpenAIModel.GPT4_O4_MINI,
-            true
-    ); 
-    // Start a chat
-    MagicChat magicChat = magicGPT.startChat(CustomPrompt.buildHeadPrompt(headCustomPrompt), Language.CHINESE);
+    MagicApp.start("com.magicvector.ai.examples.timeReporter");
+    
+    // load prompt
+    String headCustomPrompt = PromptUtil.readResourceByRelativePath("custom_prompts/time_reporter.prompt");
+    
+    // specify the model
+    MagicAgent agent = new MagicAgent("deepseek-chat", headCustomPrompt);
 
+    System.out.print("AI：你好，当你需要知道现在几点了，随时问我!");
+    
 ```
 
 ### Proceed a chat
@@ -166,17 +168,17 @@ Output to console:
 ```java
 
     // Advance a chat, specifying an output stream for the AI's output
-    magicGPT.proceedChatWithUserMessage(magicChat, input, new SystemOutputStream());
+    agent.proceedWithStream(input, new SystemOutputStream());
 
 ```
 
 Output to HttpResponse：
-```java
-
+```java 
+    
     OutputStream outputStream = response.getEntity().getContent();
 
     // User inputs a sentence, advancing a chat, specifying HttpResponse output stream
-    magicGPT.proceedChatWithUserMessage(input, magicChat, outputStream);
+    agent.proceedWithStream(input, outputStream);
 
 ```
 
@@ -193,14 +195,7 @@ For complete runnable code, refer to src/test/java under com.magicvector.ai.exam
 3.	If you wish to modify code in this repository, please create a relevant ISSUE first before submitting a Pull Request.
 4.	Do not expose any private data in the code, as we cannot be responsible for data leaks.
 
-## Donation
-
-
-## Wechat Group
-<img src="image/wechatgroup.jpg" alt="img" width="200px">
-
 
 
 ## Open Source License
-
 This project follows the [MIT Open Source License](https://opensource.org/licenses/MIT).

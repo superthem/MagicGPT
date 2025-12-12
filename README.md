@@ -95,19 +95,19 @@
 
 Gradle，SBT，Leiningen等其他包管理方式参考： https://jitpack.io/#cn.magicvector/MagicGPT
 
-### 设置AI_API_KEY和API_MIRROR
+### 设置AI_API_KEY和API_URL
 
 #### 在VM OPTIONS中添加
 
 >如IDEA中，Edit Configurations中添加即可。
 ```
--DAI_API_KEY=XXXXXXXXXXXXX -DAPI_MIRROR=https://XXXXXXXXXXXXX.XXXX/v1/chat/completions
+-DAI_API_KEY=XXXXXXXXXXXXX -DAPI_URL=https://XXXXXXXXXXXXX.XXXX/v1/chat/completions
 ```
 
 
 #### 添加为环境变量
 
-将AI_API_KEY和API_MIRROR配置到系统环境中。以下是不同操作系统设置环境变量的方法：
+将AI_API_KEY和API_URL配置到系统环境中。以下是不同操作系统设置环境变量的方法：
 
 Windows
 
@@ -148,21 +148,17 @@ Linux
 当然也可以在任意.anole文件、.properties文件中定义（这种方法不推荐，会带来数据安全问题）。
 
 
-### 开启一个对话
+### 启动MagicGPT应用并开启一个对话
 ```java
+    MagicApp.start("com.magicvector.ai.examples.timeReporter");
+
+    // 加载自定义提示词
+    String headCustomPrompt = PromptUtil.readResourceByRelativePath("custom_prompts/time_reporter.prompt");
+    
     // 指定包名搜索本地Call类型咒语
-    MagicGPT magicGPT = new MagicGPT(TestTimeReporter.class.getPackage().getName(),
-            OpenAIModel.GPT4_O4_MINI,
-            true
-    ); 
-    // 指定包名搜索本地Call类型咒语
-    MagicGPT magicGPT = new MagicGPT(
-            TestTimeReporter.class.getPackage().getName(),
-            OpenAIModel.GPT4_O4_MINI,
-            true
-    );
-    // 创建聊天
-    MagicChat magicChat = magicGPT.startChat(CustomPrompt.buildHeadPrompt(headCustomPrompt), Language.CHINESE);
+    MagicAgent agent = new MagicAgent("deepseek-chat", headCustomPrompt);
+
+    System.out.print("AI：你好，当你需要知道现在几点了，随时问我!");
 ```
 
 ### 推进对话
@@ -171,14 +167,14 @@ Linux
 
 ```java
     // 推进一个聊天，指定一个输出流用于承载AI的输出
-    magicGPT.proceedChatWithUserMessage(magicChat, input, new SystemOutputStream());
+    agent.proceedWithStream(input, new SystemOutputStream());
 ```
 
 输出到HttpResponse：
 ```java
     OutputStream outputStream = response.getEntity().getContent();
     // 用户输入一句话，推进一个聊天，指定HttpResponse输出流
-    magicGPT.proceedChatWithUserMessage(input, magicChat, outputStream);
+    agent.proceedWithStream(input, outputStream);
 
 ```
 
@@ -193,3 +189,7 @@ Linux
 2. 欢迎任何形式的贡献：ISSUE建议、Pull Request、加群建议等。
 3. 如果想要在本仓库改动代码，请先创建相关ISSUE，然后再提交Pull Request。
 4. 不要将任何隐私数据暴露到代码中，我们对数据泄露无法担负任何责任。
+
+## 开源许可证
+
+本项目遵循 [MIT 开源许可证](https://opensource.org/licenses/MIT)。

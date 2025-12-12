@@ -9,8 +9,8 @@ import java.util.List;
 @Data
 public class GPTRequest implements Serializable {
     private String model;
-    @SerializedName("max_tokens")
-    private Integer maxTokens;
+    @SerializedName("max_completion_tokens")
+    private Integer maxCompletionTokens;
     private Double temperature;
     private List<GPTMessage> messages;
     private Boolean stream;

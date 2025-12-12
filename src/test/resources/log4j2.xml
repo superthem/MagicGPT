@@ -10,7 +10,7 @@
     </Appenders>
     <Loggers>
         <!-- 根日志记录器 -->
-        <Root level="info">
+        <Root level="INFO">
             <AppenderRef ref="ConsoleAppender" />
         </Root>
     </Loggers>

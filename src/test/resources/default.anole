@@ -1,4 +1,3 @@
 #env:all
-llm.api.chat.url=https://api.deepseek.com/chat/completions
 llm.chat.temperature=1
 llm.chat.response.max.length=4096

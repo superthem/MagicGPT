@@ -10,17 +10,13 @@ import com.magicvector.ai.wizards.model.MagicChat;
 import com.magicvector.ai.wizards.model.MagicMessage;
 import com.github.tbwork.anole.loader.Anole;
 import com.github.tbwork.anole.loader.util.JSON;
-import com.google.gson.JsonObject;
 import com.magicvector.ai.brain.llm.AbstractRemoteBrain;
-import lombok.extern.log4j.Log4j;
-import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -41,7 +37,12 @@ public class GeneralBrain extends AbstractRemoteBrain {
                 Anole.getLongProperty("llm.api.timeout.connect", 10L),
                 Anole.getLongProperty("llm.api.timeout.call", 1000L)
         );
-        this.chatApiUrl = Anole.getProperty("llm.api.chat.url");;
+        String llmApiUrl = Anole.getProperty("llm.api.chat.url");
+        if(S.isEmpty(llmApiUrl)){
+            llmApiUrl = Anole.getProperty("API_URL");
+        }
+        Assert.judge(S.isNotEmpty(llmApiUrl), "未提供有效的LLM API地址");
+        this.chatApiUrl = llmApiUrl;
         this.modelName = modelName;
     }
 
@@ -168,7 +169,7 @@ public class GeneralBrain extends AbstractRemoteBrain {
     private GPTRequest buildChatGPTRequest(MagicChat magicChat, Boolean stream) {
         GPTRequest gptRequest = new GPTRequest();
         gptRequest.setModel(modelName);
-        gptRequest.setMaxTokens(Anole.getIntProperty("llm.chat.response.max.length", 4096));
+        gptRequest.setMaxCompletionTokens(Anole.getIntProperty("llm.chat.response.max.length", 4096));
         gptRequest.setTemperature(Anole.getDoubleProperty("llm.chat.temperature", 0.6));
         gptRequest.setStream(stream);
         List<GPTMessage> messages = new ArrayList<>();
